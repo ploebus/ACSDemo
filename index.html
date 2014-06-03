@@ -10,6 +10,14 @@
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
   <link rel="stylesheet" href="styles.css">
 
+  <!--script stuff-->
+  <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="bootstrap/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+  <script src="PovertyTract.js"></script>
+  <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.4"></script>
+
   <!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
@@ -41,23 +49,17 @@
 		<div class="row-fluid">
 			<div id="map" class="shadow span8"></div>
 			<div class="span4 shadow round" id="sideBar">
-				<button id="getRandom" align="center" class="btn"><img src="myButton.jpg"height="200" width="200" alt="Randomate"></image> Go Random!</button>
+				<button id="getRandom" align="center" class="btn"><img src="myButton.png"height="200" width="200" alt="Randomate"></image> Click To Go Random!</button>
 				<h3 align="center">How many poor households are there in Oakland?</h3>
 				<h1 id="theCount" align="center">0</h1>
 			</div>
 		</div>
     </div>
-  <!--script stuff-->
-  <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-  <script src="bootstrap/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
-  <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
-  <script src="PovertyTract.js"></script>
  
 
   <script>
 	
-	var map = L.map('map').setView([37.987742, -122.158730,13], 12);
+<!--var map = L.map('map').setView([37.987742, -122.158730,13], 12);>
 	
 	
 	
@@ -67,7 +69,12 @@
     "opacity": 0.65
 };
 	
-		
+var layer = new L.StamenTileLayer("toner");
+var map = new L.Map("map", {
+    center: new L.LatLng(37.987742, -122.158730,13),
+    zoom: 12
+});
+map.addLayer(layer);		
 	
 	
 	
@@ -91,7 +98,7 @@
         opacity: 1,
         color: 'white',
         dashArray: '3',
-        fillOpacity: 0.7
+        fillOpacity: 0.8
     };
 }
 
@@ -127,7 +134,7 @@ function resetHighlight(e) {
 function onEachFeature(feature, layer) {
     // does this feature have a property named popupContent?
     
-        layer.bindPopup("<strong>" + feature.properties.TRACTCE10 + "</strong><BR/>Guesstimated Value:" + feature.properties.TractPov_7 + "%" + "<br>Households in Poverty: " + feature.properties.TractPov_2);
+        layer.bindPopup("<strong>Tract Number: " + feature.properties.TRACTCE10 + "</strong><BR/>Guesstimated Value: " + feature.properties.TractPov_7 + "%" + "<br>Households in Poverty: " + feature.properties.TractPov_2);
 		layer.on({
 			mouseover:highlightFeature,
 			mouseout:resetHighlight
@@ -158,7 +165,7 @@ var info = L.control();
 
 		info.update = function (props) {
 			this._div.innerHTML = '<h4>ACS Poverty by Household</h4>' +  (props ?
-				'<b>' + props.TRACTCE10 + '</b><br />' + props.TractPov_7 + '% poverty'
+				'<b>Tract ID ' + props.TRACTCE10 + '</b><br />' + props.TractPov_7 + '% poverty'
 				: 'Hover over tract to see values');
 		};
 
